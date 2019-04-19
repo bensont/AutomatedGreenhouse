@@ -9,7 +9,16 @@ class DatabaseFacade:
     
     def SetUp(self):
         Tables = {}
-        Tables['Data'] = ("CREATE TABLE `data` (`record_number` int(10) NOT NULL AUTO_INCREMENT,`temperature` float(10,5) NOT NULL, PRIMARY KEY(`record_number`))")
+        Tables['Data'] = ("CREATE TABLE `data` ("
+                    "`record_number` int(10) NOT NULL AUTO_INCREMENT,"
+                    "`lux` float(10,5) NOT NULL,"
+                    "`full_spectrum` float(10,5) NOT NULL,"
+                    "`infra_red` float(10,5) NOT NULL,"
+                    "`air_humidity` float(10,5) NOT NULL,"
+                    "`air_temperature` float(10,5) NOT NULL,"
+                    "`soil_humidity` float(10,5) NOT NULL,"
+                    "`soil_temperature` float(10,5) NOT NULL,"
+            "PRIMARY KEY(`record_number`))")
         
         for table_name in Tables:
             table_description = Tables[table_name]
@@ -24,10 +33,15 @@ class DatabaseFacade:
             else:
                 print("Created Table")
     
-    def AddSensorRecord(self,Data):
-        command = ("Insert into `data` (`temperature`) values (6);")
+    def AddSensorRecord(self,data):
+        #{0},{1},{2},{3},{4},{5},{6}
+        print(data)
+        command = ("Insert into `data` (`lux`,`full_spectrum`,`infra_red`,"
+                   "`air_humidity`,`air_temperature`,`soil_humidity`,`soil_temperature`"
+                   ") values (%s,%s,%s,%s,%s,%s,%s);")
+        #print(command)
         try:
-            self.cursor.execute(command)
+            self.cursor.execute(command,data)
         except mariadb.Error as err:
             print(err.msg)
             
