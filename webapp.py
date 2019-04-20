@@ -16,7 +16,7 @@ if (numSamples > 101):
 # main route
 @app.route("/")
 def index():
-    time, temp, hum, soil, light = getLastData()
+    time, temp, hum, soil, light = db.GetLastData()
     templateData = {
         'time'  : time,
         'temp'  : temp,
@@ -118,4 +118,4 @@ def plot_light():
     return response
 
 if __name__ == "__main__":
-   app.run(host='0.0.0.0', port=80, debug=False)
+   app.run(host='0.0.0.0', port=36636, debug=False)
