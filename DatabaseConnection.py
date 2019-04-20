@@ -18,20 +18,21 @@ class DatabaseFacade:
                     "`air_temperature` float(10,5) NOT NULL,"           #5
                     "`soil_humidity` float(10,5) NOT NULL,"             #6
                     "`soil_temperature` float(10,5) NOT NULL,"          #7
+                    "`time_taken TIMESTAMP DEFAULT CURRENT_TIMESTAMP`," #8
             "PRIMARY KEY(`record_number`))")
         
         for table_name in Tables:
             table_description = Tables[table_name]
             try:
-                print("Creating Table")
+                print("Creating Data table")
                 self.cursor.execute(table_description)
             except mariadb.Error as err:
                 if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-                    print("Table already exists")
+                    print("Data table already exists")
                 else:
                     print(err.msg)
             else:
-                print("Created Table")
+                print("Created data Table")
     
     def AddSensorRecord(self,data):
         #{0},{1},{2},{3},{4},{5},{6}
@@ -55,7 +56,7 @@ class DatabaseFacade:
         query = ("SELECT * FROM data ORDER BY record_number DESC LIMIT 1")
         self.cursor.execute(query)
         for row in cursor:
-            time = row[0]
+            time = row[8]
             temp = row[5]
             hum = row[4]
             soil = row [6]
@@ -71,7 +72,7 @@ class DatabaseFacade:
         soils = []
         lights = []
         for row in reversed(self.cursor):
-            dates.append(row[0])
+            dates.append(row[8])
             temps.append(row[5])
             hums.append(row[4])
             soils.append(row[6])
