@@ -1,6 +1,8 @@
 import mysql.connector as mariadb
 from mysql.connector import errorcode
 
+Table_Name = "data"
+
 class DatabaseFacade:
     #pass,user,db,host
     def __init__(self,inpassword,inuser,indatabase,inhost):
@@ -9,7 +11,7 @@ class DatabaseFacade:
     
     def SetUp(self):
         Tables = {}
-        Tables['Data'] = ("CREATE TABLE `data` ("
+        Tables['Data'] = ("CREATE TABLE " + Table_Name + " ("
                     "`record_number` int(10) NOT NULL AUTO_INCREMENT,"  #0
                     "`lux` float(10,5) NOT NULL,"                       #1
                     "`full_spectrum` float(10,5) NOT NULL,"             #2
@@ -37,7 +39,7 @@ class DatabaseFacade:
     def AddSensorRecord(self,data):
         #{0},{1},{2},{3},{4},{5},{6}
         print(data)
-        command = ("Insert into `data` (`lux`,`full_spectrum`,`infra_red`,"
+        command = ("Insert into " + Table_Name + "  (`lux`,`full_spectrum`,`infra_red`,"
                    "`air_humidity`,`air_temperature`,`soil_humidity`,`soil_temperature`"
                    ") values (%s,%s,%s,%s,%s,%s,%s);")
         #print(command)
@@ -53,7 +55,7 @@ class DatabaseFacade:
         self.connection.close()
 
     def GetLastData(self):
-        query = ("SELECT * FROM data ORDER BY record_number DESC LIMIT 1")
+        query = ("SELECT * FROM " + Table_Name + "  ORDER BY record_number DESC LIMIT 1")
         self.cursor.execute(query)
         for row in cursor:
             time = row[8]
@@ -64,7 +66,7 @@ class DatabaseFacade:
         return time,temp,hum,soil,light
 
     def GetHistData(self, numSamples):
-        query = ("SELECT * FROM data ORDER BY record_number DESC LIMIT "+str(numSamples))
+        query = ("SELECT * FROM " + Table_Name + "  ORDER BY record_number DESC LIMIT "+str(numSamples))
         self.cursor.execute(query)
         dates = []
         temps = []
@@ -80,7 +82,7 @@ class DatabaseFacade:
         return dates, temps, hums, soils, lights
 
     def MaxRowsTable(self):
-        query = ("SELECT count(*) from data")
+        query = ("SELECT count(*) from " + Table_Name + " ")
         self.cursor.execute(query)
         for y in self.cursor:
             print(y)
