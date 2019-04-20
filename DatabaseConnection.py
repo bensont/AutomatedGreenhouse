@@ -52,8 +52,8 @@ class DatabaseFacade:
         self.connection.close()
 
     def GetLastData(self):
-        query = ("SELECT * FROM Data ORDER BY record_number DESC LIMIT 1")
-        cursor.execute(query)
+        query = ("SELECT * FROM data ORDER BY record_number DESC LIMIT 1")
+        self.cursor.execute(query)
         for row in cursor:
             time = row[0]
             temp = row[5]
@@ -63,14 +63,14 @@ class DatabaseFacade:
         return time,temp,hum,soil,light
 
     def GetHistData(self, numSamples):
-        query = ("SELECT * FROM Data ORDER BY record_number DESC LIMIT "+str(numSamples))
-        cursor.execute(query)
+        query = ("SELECT * FROM data ORDER BY record_number DESC LIMIT "+str(numSamples))
+        self.cursor.execute(query)
         dates = []
         temps = []
         hums = []
         soils = []
         lights = []
-        for row in reversed(cursor):
+        for row in reversed(self.cursor):
             dates.append(row[0])
             temps.append(row[5])
             hums.append(row[4])
@@ -78,11 +78,13 @@ class DatabaseFacade:
             lights.append(row[1])
         return dates, temps, hums, soils, lights
 
-    def maxRowsTable():
-        query = ("SELECT count from Data")
-        cursor.execute(query)
-        for x in cursor:
-            print(x)
+    def MaxRowsTable(self):
+        query = ("SELECT count(*) from data")
+        self.cursor.execute(query)
+        for y in self.cursor:
+            print(y)
+        for x in self.cursor:
+            return x[0]
         #number of rows
 
 
