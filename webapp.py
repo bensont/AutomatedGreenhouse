@@ -1,50 +1,15 @@
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import io
+import DatabaseConnection as DBC
 
 from flask import Flask, render_template, send_file, make_response, request
 app = Flask(__name__)
 
-import sqlite3
-conn=sqlite3.connect('../sensorsData.db')
-curs=conn.cursor()
-
-# Retrieve LAST data from database
-def getLastData():
-	for row in curs.execute("SELECT * FROM sensorData ORDER BY timestamp DESC LIMIT 1"):
-		time = str(row[0])
-		temp = row[1]
-		hum = row[2]
-		soil = row[3]
-		light = row[4]
-
-	#conn.close()
-	return time, temp, hum, soil, light
-
-def getHistData (numSamples):
-	curs.execute("SELECT * FROM sensorData ORDER BY timestamp DESC LIMIT "+str(numSamples))
-	data = curs.fetchall()
-	dates = []
-	temps = []
-	hums = []
-	soils = []
-	lights = []
-	for row in reversed(data):
-		dates.append(row[0])
-		temps.append(row[1])
-		hums.append(row[2])
-		soils.append(row[3])
-		lights.append(row[4])
-	return dates, temps, hums, soils, lights
-
-def maxRowsTable():
-	for row in curs.execute("select COUNT(temp) from  sensorData"):
-		maxNumberRows=row[0]
-	return maxNumberRows
-
+db = new DBC()
 # define and initialize global variables
 global numSamples
-numSamples = maxRowsTable()
+numSamples = db.MaxRowsTable()
 if (numSamples > 101):
     numSamples = 100
 
@@ -66,7 +31,7 @@ def index():
 def my_form_post():
     global numSamples
     numSamples = int (request.form['numSamples'])
-    numMaxSamples = maxRowsTable()
+    numMaxSamples = db.MaxRowsTable()
     if (numSamples > numMaxSamples):
         numSamples = (numMaxSamples-1)
     time, temp, hum, soil, light = getLastData()
@@ -82,7 +47,7 @@ def my_form_post():
 
 @app.route('/plot/temp')
 def plot_temp():
-	times, temps, hums, soils, lights = getHistData(numSamples)
+	times, temps, hums, soils, lights = db.GetHistData(numSamples)
 	ys = temps
 	fig = Figure()
 	axis = fig.add_subplot(1, 1, 1)
@@ -100,7 +65,7 @@ def plot_temp():
 
 @app.route('/plot/hum')
 def plot_hum():
-	times, temps, hums, soils, lights = getHistData(numSamples)
+	times, temps, hums, soils, lights = db.GetHistData(numSamples)
 	ys = hums
 	fig = Figure()
 	axis = fig.add_subplot(1, 1, 1)
@@ -118,7 +83,7 @@ def plot_hum():
 
 @app.route('/plot/soil')
 def plot_soil():
-	times, temps, hums, soils, lights = getHistData(numSamples)
+	times, temps, hums, soils, lights = db.GetHistData(numSamples)
 	ys = soils
 	fig = Figure()
 	axis = fig.add_subplot(1, 1, 1)
@@ -136,7 +101,7 @@ def plot_soil():
 
 @app.route('/plot/light')
 def plot_light():
-	times, temps, hums, soils, lights = getHistData(numSamples)
+	times, temps, hums, soils, lights = db.GetHistData(numSamples)
 	ys = lights
 	fig = Figure()
 	axis = fig.add_subplot(1, 1, 1)
