@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Sensor Data</title>
+		<link rel="stylesheet" href='../static/style.css'/>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+		body {
+			text-align: center;
+		}
+		#g1,
+		#g2 {
+			width: 200px;
+			height: 160px;
+			display: inline-block;
+			margin: 1em;
+		}
+		#g3 {
+			width: 200px;
+			height: 160px;
+			display: inline-block;
+			margin: 1em;
+		}
+		#g4 {
+			width: 200px;
+			height: 160px;
+			display: inline-block;
+			margin: 1em;
+		}
+		</style>
+		
+</head>
+
+<body>
+	<div class="p-3 mb-2 bg-dark text-white">
+	<h1> Sensor Data </h1>
+    <div id="g1"></div>
+		<div id="g2"></div>
+		<div id="g3"></div>
+		<div id="g4"></div>
+    <hr>
+	<h3> Last Sensor Reading: {{ time }} ==> <a href="/"class="button">REFRESH</a></h3>	
+	<hr>
+	<hr>
+	<h3>  <a href="/"class="button">Take A Photo</a></h3>	
+	<hr>
+	<h3> HISTORICAL DATA </h3>
+		<p> Enter number of samples to retrieve:
+		<form method="POST">
+			<input name="numSamples" value= {{numSamples}}>
+			<input type="submit">
+		</form></p>
+		<hr>
+		<img src="/plot/temp" alt="Image Placeholder" width="49%">
+		<img src="/plot/hum" alt="Image Placeholder" width="49%">
+		<img src="/plot/soil" alt="Image Placeholder" width="49%">
+		<img src="/plot/light" alt="Image Placeholder" width="49%">
+
+	<p> @2019 Developed by Benson Mooney and Goldstein</p>
+</div>
+    
+    <script src="../static/raphael-2.1.4.min.js"></script>
+		<script src="../static/justgage.js"></script>
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>    <script>
+		var g1, g2, g3, g4;
+		document.addEventListener("DOMContentLoaded", function(event) {
+			g1 = new JustGage({
+				id: "g1",
+				value: {{temp}},
+				min: -10,
+				max: 50,
+				title: "Temperature",
+				label: "Celcius"
+			});
+			g2 = new JustGage({
+				id: "g2",
+				value: {{hum}},
+				min: 0,
+				max: 100,
+				title: "Humidity",
+				label: "%"
+			});
+			g3 = new JustGage({
+				id: "g3",
+				value: {{soil}},
+				min: 0,
+				max: 300,
+				title: "Soil Moisture",
+				label: ""
+			});
+			g4 = new JustGage({
+				id: "g4",
+				value: {{light}},
+				min: 0,
+				max: 300,
+				title: "Light Intensity",
+				label: "lumens"
+			});
+		});
+    </script>
+</body>
+
+</html>
