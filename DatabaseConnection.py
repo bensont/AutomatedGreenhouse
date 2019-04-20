@@ -10,14 +10,14 @@ class DatabaseFacade:
     def SetUp(self):
         Tables = {}
         Tables['Data'] = ("CREATE TABLE `data` ("
-                    "`record_number` int(10) NOT NULL AUTO_INCREMENT,"
-                    "`lux` float(10,5) NOT NULL,"
-                    "`full_spectrum` float(10,5) NOT NULL,"
-                    "`infra_red` float(10,5) NOT NULL,"
-                    "`air_humidity` float(10,5) NOT NULL,"
-                    "`air_temperature` float(10,5) NOT NULL,"
-                    "`soil_humidity` float(10,5) NOT NULL,"
-                    "`soil_temperature` float(10,5) NOT NULL,"
+                    "`record_number` int(10) NOT NULL AUTO_INCREMENT,"  #0
+                    "`lux` float(10,5) NOT NULL,"                       #1
+                    "`full_spectrum` float(10,5) NOT NULL,"             #2
+                    "`infra_red` float(10,5) NOT NULL,"                 #3
+                    "`air_humidity` float(10,5) NOT NULL,"              #4
+                    "`air_temperature` float(10,5) NOT NULL,"           #5
+                    "`soil_humidity` float(10,5) NOT NULL,"             #6
+                    "`soil_temperature` float(10,5) NOT NULL,"          #7
             "PRIMARY KEY(`record_number`))")
         
         for table_name in Tables:
@@ -50,6 +50,41 @@ class DatabaseFacade:
     def Close(self):
         self.cursor.close()
         self.connection.close()
-        
+
+    def GetLastData(self):
+        query = ("SELECT * FROM Data ORDER BY record_number DESC LIMIT 1")
+        cursor.execute(query)
+        for row in cursor:
+            time = row[0]
+            temp = row[5]
+            hum = row[4]
+            soil = row [6]
+            light = row [1] 
+        return time,temp,hum,soil,light
+
+    def GetHistData(self, numSamples):
+        query = ("SELECT * FROM Data ORDER BY record_number DESC LIMIT "+str(numSamples))
+        cursor.execute(query)
+        dates = []
+        temps = []
+        hums = []
+        soils = []
+        lights = []
+        for row in reversed(cursor):
+            dates.append(row[0])
+            temps.append(row[5])
+            hums.append(row[4])
+            soils.append(row[6])
+            lights.append(row[1])
+        return dates, temps, hums, soils, lights
+
+    def maxRowsTable():
+        query = ("SELECT count from Data")
+        cursor.execute(query)
+        for x in cursor:
+            print(x)
+        #number of rows
+
+
     #result = connection.execute("SELECT * FROM *")
         #print(result)
