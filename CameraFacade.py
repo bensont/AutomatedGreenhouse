@@ -1,3 +1,4 @@
+import time
 from picamera import PiCamera
 from time import sleep
 
@@ -19,6 +20,8 @@ from time import sleep
 #    camera.capture('/home/pi/Documents/Image_Captures/image%s.jpg' % i)
 #camera.stop_preview()
 
+# there is only support for one offical CSI camera port. This facade is needed for adding more
+# cameras usigng a Multi-Camera Adapter Module or using webcams via USB input in the future
 class CameraFacade:
     def __init__(self):
         self.camera = Camera()
@@ -32,21 +35,22 @@ class CameraFacade:
 class Camera:
     def __init__(self):
         self.camera = PiCamera()
-        image_count = 0
         
     def take_picture(self):
-        image_count += 1
-        camera.start_preview()
+        stamp = time.time()
+        self.camera.start_preview()
         sleep(3)
-        camera.capture('/home/pi/Documents/Image_Captures/image%s.jpg' % image_count)
-        camera.stop_preview()        
+        self.camera.capture('/home/pi/Documents/Image_Captures/image%s.jpg' % stamp)
+        self.camera.stop_preview()        
     
     def take_recording(self, time):
-        camera.start_preview()
-        camera.start_recording()
+        stamp = time.time()
+        self.camera.start_preview()
+        self.camera.start_recording('/home/pi/Documents/Image_Captures/recording%s.jpg' % stamp)
         sleep(time)
-        camera.stop_recording()
-        camera.stop_preview()
+        self.camera.stop_recording()
+        self.camera.stop_preview()
+        
 # Added a main to test the facade independently
 def main():
     cameraFacade = CameraFacade()
