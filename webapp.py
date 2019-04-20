@@ -33,8 +33,8 @@ def my_form_post():
     numSamples = int (request.form['numSamples'])
     numMaxSamples = db.MaxRowsTable()
     if (numSamples > numMaxSamples):
-        numSamples = (numMaxSamples-1)
-    time, temp, hum, soil, light = getLastData()
+        numSamples = (numMaxSamples)
+    time, temp, hum, soil, light = db.GetLastData()
     templateData = {
         'time'  : time,
         'temp'  : temp,
