@@ -6,7 +6,7 @@ import DatabaseConnection as DBC
 from flask import Flask, render_template, send_file, make_response, request
 app = Flask(__name__)
 
-db = DBC.DatabaseFacade('ooad','plant','OOADProject','127.0.0.1')
+db = DBC.DatabaseFacade('LongPassword','Web','OOADProject','127.0.0.1')
 # define and initialize global variables
 global numSamples
 numSamples = db.MaxRowsTable()

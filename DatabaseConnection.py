@@ -20,7 +20,7 @@ class DatabaseFacade:
                     "`air_temperature` float(10,5) NOT NULL,"           #5
                     "`soil_humidity` float(10,5) NOT NULL,"             #6
                     "`soil_temperature` float(10,5) NOT NULL,"          #7
-                    "`time_taken TIMESTAMP DEFAULT CURRENT_TIMESTAMP`," #8
+                    "`time_taken` TIMESTAMP DEFAULT CURRENT_TIMESTAMP," #8
             "PRIMARY KEY(`record_number`))")
         
         for table_name in Tables:

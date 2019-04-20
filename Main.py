@@ -10,7 +10,7 @@ def main():
     
     start = time.time()
     running = 0
-    while(running < 1):
+    while(running < 3):
         if(time.time()-start > 3):
             plot.get_condition()
             db.AddSensorRecord(plot.return_current())
