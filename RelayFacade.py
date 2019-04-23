@@ -21,7 +21,7 @@ Pins = [5,6,13,26]
 GPIO.setup(26, GPIO.OUT)
 print("Setting pin 26 to false.")
 GPIO.output(26, False)
-sleep(2)
+sleep(5)
 print("Setting pin 26 to true.")
 GPIO.output(26, True)
 sleep(10)
