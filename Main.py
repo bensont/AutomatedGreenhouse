@@ -24,7 +24,7 @@ def main():
     d.start()
     
     #there is an implicit wait here
-    
+    #db.close()
 
 def setUpWebApp(database,cv):
     #unclear if a conditional variable is required
