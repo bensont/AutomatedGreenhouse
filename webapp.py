@@ -47,64 +47,21 @@ def my_form_post():
 
 @app.route('/plot/temp')
 def plot_temp():
-    times, temps, hums, soils, lights = db.GetHistData(numSamples)
-    ys = temps
-    fig = Figure()
-    axis = fig.add_subplot(1, 1, 1)
-    axis.set_title("Temperature [C]")
-    axis.set_xlabel("Samples")
-    axis.grid(True)
-    xs = range(numSamples)
-    axis.plot(xs, ys)
-    canvas = FigureCanvas(fig)
-    output = io.BytesIO()
-    canvas.print_png(output)
-    response = make_response(output.getvalue())
-    response.mimetype = 'image/png'
-    return response
+    return create_plot("Temperature [C]",1)
 
 @app.route('/plot/hum')
 def plot_hum():
-    times, temps, hums, soils, lights = db.GetHistData(numSamples)
-    ys = hums
-    fig = Figure()
-    axis = fig.add_subplot(1, 1, 1)
-    axis.set_title("Humidity [%]")
-    axis.set_xlabel("Samples")
-    axis.grid(True)
-    xs = range(numSamples)
-    axis.plot(xs, ys)
-    canvas = FigureCanvas(fig)
-    output = io.BytesIO()
-    canvas.print_png(output)
-    response = make_response(output.getvalue())
-    response.mimetype = 'image/png'
-    return response
+    return create_plot("Humidity [%]",2)
 
 @app.route('/plot/soil')
 def plot_soil():
-    times, temps, hums, soils, lights = db.GetHistData(numSamples)
-    ys = soils
-    fig = Figure()
-    axis = fig.add_subplot(1, 1, 1)
-    axis.set_title("Soil Moisture")
-    axis.set_xlabel("Samples")
-    axis.grid(True)
-    xs = range(numSamples)
-    axis.plot(xs, ys)
-    canvas = FigureCanvas(fig)
-    output = io.BytesIO()
-    canvas.print_png(output)
-    response = make_response(output.getvalue())
-    response.mimetype = 'image/png'
-    return response
-    return create_plot("Soil Moisture",4)
+    return create_plot("Soil Moisture",3)
 
 @app.route('/plot/light')
 def plot_light():
     return create_plot("Light Intensity",4)
 
-def create_plot(title,ys)
+def create_plot(title,ys):
     #data is dates, temps, humidity, soil, lights
     data = db.GetHistData(numSamples)
     fig = Figure()
@@ -122,7 +79,7 @@ def create_plot(title,ys)
     return response
 
 
-def create(indb,runport)
+def create(indb,runport):
     db = indb
     app.run(host='0.0.0.0', port=runport, debug=False)
 
