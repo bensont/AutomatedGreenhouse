@@ -51,6 +51,7 @@ class Holder:
 def index():
     full_filename = os.path.join(app.config['UPLOAD_FOLDER'], 'plant.jpg')
     with Holder.cv():
+        Holder.SetNumSamples()
         time, temp, hum, soil, light = Holder.GetLastData()
         num = Holder.numSamples()
         Holder.cv().notifyAll()
@@ -67,10 +68,11 @@ def index():
 
 @app.route('/', methods=['POST'])
 def my_form_post():
-    numMaxSamples = Holder.MaxRowsTable()
-    if (Holder.numSamples() > numMaxSamples):
-        Holder.SetNumSamples = (numMaxSamples)
+    full_filename = os.path.join(app.config['UPLOAD_FOLDER'], 'plant.jpg')
+    
+    #need fixed logic for requesting fewer than max samples
     with Holder.cv():
+        Holder.SetNumSamples()
         time, temp, hum, soil, light = Holder.GetLastData()
         Holder.cv().notifyAll()
     templateData = {
@@ -79,7 +81,8 @@ def my_form_post():
         'hum'   : hum,
         'soil' : soil,
         'light' : light,
-        'numSamples'    : Holder.numSamples()
+        'numSamples'    : Holder.numSamples(),
+        'plant_image' : full_filename
     }
     return render_template('index.html', **templateData)
 
