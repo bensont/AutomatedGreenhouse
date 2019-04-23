@@ -98,24 +98,33 @@ def plot_soil():
     response = make_response(output.getvalue())
     response.mimetype = 'image/png'
     return response
+    return create_plot("Soil Moisture",4)
 
 @app.route('/plot/light')
 def plot_light():
-    times, temps, hums, soils, lights = db.GetHistData(numSamples)
-    ys = lights
+    return create_plot("Light Intensity",4)
+
+def create_plot(title,ys)
+    #data is dates, temps, humidity, soil, lights
+    data = db.GetHistData(numSamples)
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
-    axis.set_title("Light Intensity")
+    axis.set_title(title)
     axis.set_xlabel("Samples")
     axis.grid(True)
     xs = range(numSamples)
-    axis.plot(xs, ys)
+    axis.plot(xs, data[ys])
     canvas = FigureCanvas(fig)
     output = io.BytesIO()
     canvas.print_png(output)
     response = make_response(output.getvalue())
     response.mimetype = 'image/png'
     return response
+
+
+def create(indb,runport)
+    db = indb
+    app.run(host='0.0.0.0', port=runport, debug=False)
 
 if __name__ == "__main__":
    app.run(host='0.0.0.0', port=36636, debug=False)
