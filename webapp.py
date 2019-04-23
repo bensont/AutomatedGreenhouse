@@ -7,6 +7,7 @@ from flask import Flask, render_template, send_file, make_response, request
 app = Flask(__name__)
 
 db = DBC.DatabaseFacade('LongPassword','Web','OOADProject','127.0.0.1')
+cv = None
 # define and initialize global variables
 global numSamples
 numSamples = db.MaxRowsTable()
@@ -16,7 +17,9 @@ if (numSamples > 101):
 # main route
 @app.route("/")
 def index():
-    time, temp, hum, soil, light = db.GetLastData()
+    with cv:
+        time, temp, hum, soil, light = db.GetLastData()
+        cv.notifyAll()
     templateData = {
         'time'  : time,
         'temp'  : temp,
@@ -34,7 +37,9 @@ def my_form_post():
     numMaxSamples = db.MaxRowsTable()
     if (numSamples > numMaxSamples):
         numSamples = (numMaxSamples)
-    time, temp, hum, soil, light = db.GetLastData()
+    with cv:
+        time, temp, hum, soil, light = db.GetLastData()
+        cv.notifyAll()
     templateData = {
         'time'  : time,
         'temp'  : temp,
@@ -63,7 +68,9 @@ def plot_light():
 
 def create_plot(title,ys):
     #data is dates, temps, humidity, soil, lights
-    data = db.GetHistData(numSamples)
+    with cv:
+        data = db.GetHistData(numSamples)
+        cv.notifyAll()
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
     axis.set_title(title)
@@ -79,9 +86,10 @@ def create_plot(title,ys):
     return response
 
 
-def create(indb,runport):
+def create(indb,runport,condvar):
     db = indb
     app.run(host='0.0.0.0', port=runport, debug=False)
+    cv = condvar
 
 if __name__ == "__main__":
    app.run(host='0.0.0.0', port=36636, debug=False)
