@@ -2,9 +2,13 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import io
 import DatabaseConnection as DBC
+import os
 
 from flask import Flask, render_template, send_file, make_response, request
 app = Flask(__name__)
+
+PLANT_FOLDER = os.path.join('static','photo')
+app.config['UPLOAD_FOLDER'] = PLANT_FOLDER
 
 class Holder:
     datab = None
@@ -45,6 +49,7 @@ class Holder:
 # main route
 @app.route("/")
 def index():
+    full_filename = os.path.join(app.config['UPLOAD_FOLDER'], 'plant.jpg')
     with Holder.cv():
         time, temp, hum, soil, light = Holder.GetLastData()
         num = Holder.numSamples()
@@ -55,7 +60,8 @@ def index():
         'hum'   : hum,
         'soil'  : soil,
         'light' : light,
-        'numSamples'    : num
+        'numSamples'    : num,
+        'plant_image' : full_filename
     }
     return render_template('index.html', **templateData)
 
