@@ -27,7 +27,8 @@ class DatabaseFacade:
             table_description = Tables[table_name]
             try:
                 print("Creating Data table")
-                self.cursor.execute(table_description)
+                message = self.cursor.execute(table_description)
+                print(message)
             except mariadb.Error as err:
                 if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
                     print("Data table already exists")

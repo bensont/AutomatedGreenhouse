@@ -6,47 +6,74 @@ import DatabaseConnection as DBC
 from flask import Flask, render_template, send_file, make_response, request
 app = Flask(__name__)
 
-db = DBC.DatabaseFacade('LongPassword','Web','OOADProject','127.0.0.1')
-cv = None
-# define and initialize global variables
-global numSamples
-numSamples = db.MaxRowsTable()
-if (numSamples > 101):
-    numSamples = 100
+class Holder:
+    datab = None
+    NumSamples = 0
+    condv = None
+    
+    @staticmethod
+    def SetDataBase(db):
+        Holder.datab = db
+    
+    @staticmethod
+    def GetLastData():
+        return Holder.datab.GetLastData()
+    
+    @staticmethod
+    def SetNumSamples():
+        Holder.NumSamples = Holder.datab.MaxRowsTable()
+        if (Holder.NumSamples > 101):
+            Holder.NumSamples = 100
+            
+    @staticmethod
+    def numSamples():
+        return Holder.NumSamples
+    
+    @staticmethod
+    def SetCondVar(condvar):
+        Holder.condv = condvar
+        
+    @staticmethod
+    def cv():
+        return Holder.condv
+    
+    @staticmethod
+    def GetHistData():
+        return Holder.datab.GetHistData(Holder.numSamples())
+
 
 # main route
 @app.route("/")
 def index():
-    with cv:
-        time, temp, hum, soil, light = db.GetLastData()
-        cv.notifyAll()
+    with Holder.cv():
+        time, temp, hum, soil, light = Holder.GetLastData()
+        num = Holder.numSamples()
+        Holder.cv().notifyAll()
     templateData = {
         'time'  : time,
         'temp'  : temp,
         'hum'   : hum,
         'soil'  : soil,
         'light' : light,
-        'numSamples'    : numSamples
+        'numSamples'    : num
     }
     return render_template('index.html', **templateData)
 
 @app.route('/', methods=['POST'])
 def my_form_post():
-    global numSamples
-    numSamples = int (request.form['numSamples'])
-    numMaxSamples = db.MaxRowsTable()
-    if (numSamples > numMaxSamples):
-        numSamples = (numMaxSamples)
-    with cv:
-        time, temp, hum, soil, light = db.GetLastData()
-        cv.notifyAll()
+    numMaxSamples = Holder.MaxRowsTable()
+    if (Holder.numSamples() > numMaxSamples):
+        Holder.SetNumSamples = (numMaxSamples)
+    with Holder.cv():
+        time, temp, hum, soil, light = Holder.GetLastData()
+        Holder.cv().notifyAll()
     templateData = {
         'time'  : time,
         'temp'  : temp,
         'hum'   : hum,
         'soil' : soil,
         'light' : light,
-        'numSamples'    : numSamples
+        'numSamples'    : Holder.numSamples()
     }
     return render_template('index.html', **templateData)
 
@@ -68,15 +95,15 @@ def plot_light():
 
 def create_plot(title,ys):
     #data is dates, temps, humidity, soil, lights
-    with cv:
-        data = db.GetHistData(numSamples)
-        cv.notifyAll()
+    with Holder.cv():
+        data = Holder.GetHistData()
+        Holder.cv().notifyAll()
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
     axis.set_title(title)
     axis.set_xlabel("Samples")
     axis.grid(True)
-    xs = range(numSamples)
+    xs = range(Holder.numSamples())
     axis.plot(xs, data[ys])
     canvas = FigureCanvas(fig)
     output = io.BytesIO()
@@ -87,9 +114,10 @@ def create_plot(title,ys):
 
 
 def create(indb,runport,condvar):
-    db = indb
+    Holder.SetDataBase(indb)
+    Holder.SetCondVar(condvar)
+    Holder.SetNumSamples()
     app.run(host='0.0.0.0', port=runport, debug=False)
-    cv = condvar
 
 if __name__ == "__main__":
    app.run(host='0.0.0.0', port=36636, debug=False)
