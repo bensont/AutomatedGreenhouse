@@ -44,24 +44,38 @@ class Plot(object):
         # Check air temperature
         if self.cur_airTemp < self.temperature_min:
             # potentially turn on heater
+            self.relay_facade.RelayNOn(1)
             print("Turn on HEATER")
+        if self.cur_airTemp > self.temperature_max:
+            # potentially turn on heater
+            self.relay_facade.RelayNOff(1)
+            print("Turn off HEATER")
         # Check air humidity
         if self.cur_humidity < self.humidity_min:
             # potentially turn ON humidifier
+            self.relay_facade.RelayNOn(2)
             print("Turn on HUMIDIFIER")
         if self.cur_humidity >= self.humidity_max:
             # potentially turn OFF humidifier
+            self.relay_facade.RelayNOff(2)
             print("Turn off HUMIDIFIER")
         # Check soil moisture
         if self.cur_moisture < self.moisture_min:
             # potentially turn on water pump (send seconds to be turned on)
             # there needs to be a check to see when the last time the plot was watered. If too recently, don't water
+            self.relay_facade.RelayNOn(3)
             print("Turn on WATER")
         # Check light (use full)
         if self.cur_light_full < self.light_min:
             # potentially turn on light
             # needs to check the time of day to see if the light should be on for the plot's light time window
+            self.relay_facade.RelayNOn(4)
             print("Turn on LIGHT")
+        if self.cur_light_full > self.light_max:
+            # potentially turn on light
+            # needs to check the time of day to see if the light should be on for the plot's light time window
+            self.relay_facade.RelayNOff(4)
+            print("Turn off LIGHT")
         # Check the time of day to turn the light off if the time is outside the plot's light time window
 
     def return_current(self):
