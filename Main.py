@@ -47,7 +47,6 @@ def setUpDataService(database,cv):
                 start = time.time()
                 running = running+1
                 cv.notifyAll()
-
     
     
 if __name__ == "__main__":
