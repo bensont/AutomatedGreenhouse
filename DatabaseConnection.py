@@ -97,25 +97,29 @@ class DatabaseFacade:
     
     def GetPlantInfo(self,plantnum):
         command = ("SELECT * FROM " +Plant_Table_Name + " WHERE plant_number = "+str(plantnum))
-        try:
-            self.cursor.execute(command)
-            for row in self.cursor:
-                print(row)
-                name = row[1]
-                minlight = row[2]
-                maxlight = row[3]
-                lightmin = row[4]
-                minairhum = row[5]
-                maxairhum = row[6]
-                minairtemp = row[7]
-                maxairtemp = row[8]
-                waterseconds = row[9]
-                waterinterval = row[10]
-                minsoilmoist = row[11]
-                maxsoilmoist = row[12]
-                return(name,minlight,maxlight,lightmin,minairhum,maxairhum,minairtemp,maxairtemp,waterseconds,waterinterval,minsoilmoist,maxsoilmoist)
-        except mariadb.Error as err:
-            print(err.msg)
+        self.cursor.execute(command)
+        #try:
+        #    self.cursor.execute(command)
+        #except mariadb.Error as err:
+        #    print(err.msg)
+        #    print("error")
+        for row in self.cursor:
+            print(row)
+            print("Here")
+            name = row[1]
+            minlight = row[2]
+            maxlight = row[3]
+            lightmin = row[4]
+            minairhum = row[5]
+            maxairhum = row[6]
+            minairtemp = row[7]
+            maxairtemp = row[8]
+            waterseconds = row[9]
+            waterinterval = row[10]
+            minsoilmoist = row[11]
+            maxsoilmoist = row[12]
+            return(name,minlight,maxlight,lightmin,minairhum,maxairhum,minairtemp,maxairtemp,waterseconds,waterinterval,minsoilmoist,maxsoilmoist)
+        
     
     def Close(self):
         self.cursor.close()

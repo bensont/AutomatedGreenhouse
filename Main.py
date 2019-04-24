@@ -8,7 +8,7 @@ def main():
     #pass,user,db,host
     db = DBC.DatabaseFacade('ooad','plant','OOADProject','127.0.0.1')
     #need to add an appropriate check to setting up the database
-    db.SetUp()
+    #db.SetUp()
     #db.AddPlantRecords()
     #return
     
@@ -34,11 +34,11 @@ def setUpWebApp(database,cv):
     webapp.create(database,36636,cv)
 
 def setUpDataService(database,cv):
-    plot = Plot.Plot(database,cv,0)
+    plot = Plot.Plot(database,cv,1)
 
     start = time.time()
     running = 0
-    while(running < 3):
+    while(running < 100):
         if(time.time()-start > 3):
             plot.get_condition()
             plot.check_condition()

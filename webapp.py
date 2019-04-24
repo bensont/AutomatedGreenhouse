@@ -124,8 +124,9 @@ def create_plot(title,ys):
 
 def create(indb,runport,condvar):
     Holder.SetDataBase(indb)
-    Holder.SetCondVar(condvar)
-    Holder.SetNumSamples()
+    with condvar:
+        Holder.SetCondVar(condvar)
+        Holder.SetNumSamples()
     app.run(host='0.0.0.0', port=runport, debug=False)
 
 if __name__ == "__main__":
