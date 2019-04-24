@@ -1,0 +1,37 @@
+# example to turn on and off
+#for i in Pins:
+#    GPIO.setup(i,GPIO.OUT)
+#    GPIO.output(i, False)
+#
+#for i in Pins:
+#    print("Setting pin", i, "to true.")
+#    GPIO.output(i, True) # turn each relay on
+#    sleep(3) # wait long enough to check that the output changed and the relay gets turned on
+#    print("Setting pin", i, "to false.")
+#    GPIO.output(i, False)
+
+GPIO.setup(5, GPIO.OUT) # Relay Switch 1
+GPIO.setup(6, GPIO.OUT) # Relay Switch 2
+GPIO.setup(13, GPIO.OUT) # Relay Switch 3
+GPIO.setup(26, GPIO.OUT) # Relay Switch 4
+
+GPIO.output(5, True)
+GPIO.output(6, True)
+GPIO.output(13, True)
+GPIO.output(26, True)
+
+print("Setting pin 26 to true.")
+GPIO.output(13, True)
+sleep(5)
+print("Setting pin 26 to false.")
+GPIO.output(13, False)
+#GPIO.output(6, False)
+#GPIO.output(13, False)
+#GPIO.output(26, False)
+sleep(5)
+print("Setting pin 26 to true.")
+GPIO.output(13, True)
+#GPIO.output(6, True)
+#GPIO.output(13, True)
+#GPIO.output(26, True)
+#

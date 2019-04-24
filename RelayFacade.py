@@ -2,95 +2,45 @@ import RPi.GPIO as GPIO
 from time import sleep
 
 GPIO.setmode(GPIO.BCM)
-#GPIO.setwarnings(False) # disable warnings for now
+GPIO.setwarnings(False) # disable warnings for now
 
 Pins = [5,6,13,26]
 
-# example to turn on and off
-#for i in Pins:
-#    GPIO.setup(i,GPIO.OUT)
-#    GPIO.output(i, False)
-#
-#for i in Pins:
-#    print("Setting pin", i, "to true.")
-#    GPIO.output(i, True) # turn each relay on
-#    sleep(3) # wait long enough to check that the output changed and the relay gets turned on
-#    print("Setting pin", i, "to false.")
-#    GPIO.output(i, False)
 
-GPIO.setup(5, GPIO.OUT) # Relay Switch 1
-GPIO.setup(6, GPIO.OUT) # Relay Switch 2
-GPIO.setup(13, GPIO.OUT) # Relay Switch 3
-GPIO.setup(26, GPIO.OUT) # Relay Switch 4
-
-GPIO.output(5, True)
-GPIO.output(6, True)
-GPIO.output(13, True)
-GPIO.output(26, True)
-
-print("Setting pin 26 to true.")
-GPIO.output(5, True)
-sleep(5)
-print("Setting pin 26 to false.")
-GPIO.output(5, False)
-GPIO.output(6, False)
-GPIO.output(13, False)
-GPIO.output(26, False)
-sleep(5)
-print("Setting pin 26 to true.")
-GPIO.output(5, True)
-GPIO.output(6, True)
-GPIO.output(13, True)
-GPIO.output(26, True)
-#    
-#class RelayFacade:
-#    def __init__(self):
-#        self.R1_on = Relay.On_Relay1()
-#        self.R2_on = Relay.On_Relay2()
-#        self.R3_on = Relay.On_Relay3()
-#        self.R4_on = Relay.On_Relay4()
-#        
-#        self.R1_off = Relay.Off_Relay1()
-#        self.R2_off = Relay.Off_Relay2()
-#        self.R3_off = Relay.Off_Relay3()
-#        self.R4_off = Relay.Off_Relay4()
-#        
-#
-#class Relay:
-#    def __init__(self):
-#        self.relay1 = 5
-#        self.relay2 = 6
-#        self.relay3 = 13
-#        self.relay4 = 26
-#        
-#    def On_Relay1:
-#        GPIO.output(self.relay1,False)
-#        print("Turned ON Relay 1")
-#        
-#    def On_Relay2:
-#        GPIO.output(self.relay2,False)
-#        print("Turned ON Relay 2")
-#        
-#    def On_Relay3:
-#        GPIO.output(self.relay3,False)
-#        print("Turned ON Relay 3")
-#        
-#    def On_Relay4:
-#        GPIO.output(self.relay4,False)
-#        print("Turned ON Relay 4")
-#        
-#    def Off_Relay1:
-#        GPIO.output(self.relay1,True)
-#        print("Turned ON Relay 1")
-#        
-#    def Off_Relay2:
-#        GPIO.output(self.relay2,True)
-#        print("Turned ON Relay 2")
-#        
-#    def Off_Relay3:
-#        GPIO.output(self.relay3,True)
-#        print("Turned ON Relay 3")
-#        
-#    def Off_Relay4:
-#        GPIO.output(self.relay4,True)
-#        print("Turned ON Relay 4")
+class RelayFacade:
+    def __init__(self):
+        self.relay1 = Pins[0]
+        self.relay2 = Pins[1]
+        self.relay3 = Pins[2]
+        self.relay4 = Pins[3]
+        AllOff()
+        
+    def AllOff(self):
+        GPIO.output(self.relay1, True)
+        GPIO.output(self.relay2, True)
+        GPIO.output(self.relay3, True)
+        GPIO.output(self.relay4, True)
+        
+    def AllOn(self):
+        GPIO.output(self.relay1, False)
+        GPIO.output(self.relay2, False)
+        GPIO.output(self.relay3, False)
+        GPIO.output(self.relay4, False)
+        
+    def RelayNOn(self,relaynum):
+        GPIO.output(NumToRelay(relaynum),False)
+        
+    def RelayNOff(self,relaynum):
+        GPIO.output(NumToRelay(relaynum),True)
+        
+    def NumToRelay(self,relaynum):
+        if(relaynum == 1):
+            return self.relay1
+        elif(relaynum == 2):
+            return self.relay2
+        elif(relaynum == 3):
+            return self.relay3
+        elif(relaynum == 4):
+            return self.relay4
+        
+        #if we fall through probably throw an exception?

@@ -4,6 +4,7 @@ class Plot(object):
     def __init__(self, indb, incv,inpnum):
         #call the database to ask about itself
         self.plant_num = inpnum
+        #Some Dependancy Injection
         self.database = indb
         self.cv = incv
         info = []
@@ -21,8 +22,10 @@ class Plot(object):
         self.moisture_min = info[9]
         self.moisture_max = info[10]
        
+        #these will both need to be transitioned into Dependancy Injection
         self.sensor_facade = SensorFacade.SensorFacade()
-        #self.relay_facade = RelayFacade.RelayFacade()
+        #when we add more than one plot, this is illigal
+        self.relay_facade = RelayFacade.RelayFacade()
         
         # Information for the GPIO for each device on the relay
         #self.light_GPIO = light_GPIO
