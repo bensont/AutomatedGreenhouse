@@ -38,6 +38,7 @@ def setUpDataService(database,cv):
     while(running < 3):
         if(time.time()-start > 3):
             plot.get_condition()
+            plot.check_condition()
             with cv:
                 database.AddSensorRecord(plot.return_current())
                 start = time.time()

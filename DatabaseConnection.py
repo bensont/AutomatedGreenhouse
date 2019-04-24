@@ -2,6 +2,8 @@ import mysql.connector as mariadb
 from mysql.connector import errorcode
 
 Table_Name = "data"
+Plant_Table_Name = "plants"
+Watering_Table_Name = "waterings"
 
 class DatabaseFacade:
     #pass,user,db,host
@@ -11,6 +13,7 @@ class DatabaseFacade:
     
     def SetUp(self):
         Tables = {}
+        #table to track sensor data from plot
         Tables['Data'] = ("CREATE TABLE " + Table_Name + " ("
                     "`record_number` int(10) NOT NULL AUTO_INCREMENT,"  #0
                     "`lux` float(10,5) NOT NULL,"                       #1
@@ -22,6 +25,30 @@ class DatabaseFacade:
                     "`soil_temperature` float(10,5) NOT NULL,"          #7
                     "`time_taken` TIMESTAMP DEFAULT CURRENT_TIMESTAMP," #8
             "PRIMARY KEY(`record_number`))")
+        
+        #table to track plants in the database
+        Tables['Plants'] = ("CREATE TABLE " + Plant_Table_Name " ( "
+                            "`plant_number` int(10) NOT NULL AUTO_INCREMENT,"
+                            "`name` char(50) NOT NULL,"
+                            "`min_light` int(8) NOT NULL,"
+                            "`max_light` int(8) NOT NULL,"
+                            "`light_minutes` int(8) NOT NULL,"
+                            "`min_air_hum` int(8) NOT NULL,"
+                            "`max_air_hum` int(8) NOT NULL,"
+                            "`min_air_temp` int(8) NOT NULL,"
+                            "`max_air_temp` int(8) NOT NULL,"
+                            "`water_seconds` int(8) NOT NULL,"
+                            "`water_interval_days` int(8) NOT NULL,"
+                            "`notes` char(500),"
+                            "PRIMARY KEY(`plant_number`))"
+                            )
+        #Table to track when pump is turned on
+        Tables['Waterings'] = ("CREATE TABLE " + Watering_Table_Name + " ("
+                               "`watering_number` int(16) NOT NULL AUTO_INCREMENT,"
+                               "`plant_num` int(10) NOT NULL"
+                               "`time_taken` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+                               "PRIMARY KEY(`watering_number`))"
+                               )
         
         for table_name in Tables:
             table_description = Tables[table_name]

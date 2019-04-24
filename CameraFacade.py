@@ -40,13 +40,14 @@ class Camera:
         stamp = time.time()
         self.camera.start_preview()
         sleep(3)
-        self.camera.capture('/home/pi/Documents/Image_Captures/image%s.jpg' % stamp)
+        self.camera.capture('/home/pi/Desktop/CSCI_4448/AutomatedGreenhouse/Images/image%s.jpg' % stamp)
+        self.camera.capture('/home/pi/Desktop/CSCI_4448/AutomatedGreenhouse/static/photo/plant.jpg')
         self.camera.stop_preview()        
     
     def take_recording(self, time):
         stamp = time.time()
         self.camera.start_preview()
-        self.camera.start_recording('/home/pi/Documents/Image_Captures/recording%s.jpg' % stamp)
+        self.camera.start_recording('/home/pi/Desktop/CSCI_4448/AutomatedGreenhouse/Images/recording%s.jpg' % stamp)
         sleep(time)
         self.camera.stop_recording()
         self.camera.stop_preview()

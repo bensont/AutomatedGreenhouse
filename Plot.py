@@ -31,6 +31,7 @@ class Plot(object):
         #self.heater_GPIO = heater_GPIO
         #self.water_GPIO = water_GPIO
         self.sensor_facade = SensorFacade.SensorFacade()
+        
 
     # Function uses the sensor facade to get the current sensor readings for the plot
     def get_condition(self):
@@ -53,12 +54,14 @@ class Plot(object):
         # Check soil moisture
         if self.cur_moisture < self.moisture_min:
             # potentially turn on water pump (send seconds to be turned on)
+            # there needs to be a check to see when the last time the plot was watered. If too recently, don't water
             print("Turn on WATER")
         # Check light (use full)
         if self.cur_light_full < self.light_min:
             # potentially turn on light
+            # needs to check the time of day to see if the light should be on for the plot's light time window
             print("Turn on LIGHT")
-
+        # Check the time of day to turn the light off if the time is outside the plot's light time window
 
     def return_current(self):
         return (self.cur_light_lux, self.cur_light_full, self.cur_light_ir, self.cur_humidity, self.cur_airTemp, self.cur_moisture, self.cur_soilTemp)
