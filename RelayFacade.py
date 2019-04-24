@@ -33,10 +33,15 @@ GPIO.output(5, True)
 sleep(5)
 print("Setting pin 26 to false.")
 GPIO.output(5, False)
+GPIO.output(6, False)
+GPIO.output(13, False)
+GPIO.output(26, False)
 sleep(5)
 print("Setting pin 26 to true.")
 GPIO.output(5, True)
-
+GPIO.output(6, True)
+GPIO.output(13, True)
+GPIO.output(26, True)
 #    
 #class RelayFacade:
 #    def __init__(self):

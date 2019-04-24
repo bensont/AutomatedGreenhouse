@@ -7,8 +7,11 @@ import threading
 def main():
     #pass,user,db,host
     db = DBC.DatabaseFacade('ooad','plant','OOADProject','127.0.0.1')
+    #need to add an appropriate check to setting up the database
     db.SetUp()
-    return
+    #db.AddPlantRecords()
+    #return
+    
     threads = []
     
     conditionalvar = threading.Condition()

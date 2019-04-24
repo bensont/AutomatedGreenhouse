@@ -27,7 +27,7 @@ class DatabaseFacade:
             "PRIMARY KEY(`record_number`))")
         
         #table to track plants in the database
-        Tables['Plants'] = ("CREATE TABLE " + Plant_Table_Name " ( "
+        Tables['Plants'] = ("CREATE TABLE " + Plant_Table_Name + " ( "
                             "`plant_number` int(10) NOT NULL AUTO_INCREMENT,"
                             "`name` char(50) NOT NULL,"
                             "`min_light` int(8) NOT NULL,"
@@ -41,13 +41,13 @@ class DatabaseFacade:
                             "`water_interval_days` int(8) NOT NULL,"
                             "`min_soil_hum` int(8) NOT NULL,"
                             "`max_soil_hum` int(8) NOT NULL,"
-                            "`notes` char(500),"
+                            "`notes` char(200),"
                             "PRIMARY KEY(`plant_number`))"
                             )
         #Table to track when pump is turned on
         Tables['Waterings'] = ("CREATE TABLE " + Watering_Table_Name + " ("
                                "`watering_number` int(16) NOT NULL AUTO_INCREMENT,"
-                               "`plant_num` int(10) NOT NULL"
+                               "`plant_num` int(10) NOT NULL,"
                                "`time_taken` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
                                "PRIMARY KEY(`watering_number`))"
                                )
@@ -79,12 +79,28 @@ class DatabaseFacade:
             print(err.msg)
             
         self.connection.commit()
+        
+    #This is soley for demonstration purposes and should not be taken as a real plant
+    def AddPlantRecords(self):
+        command = ("Insert into " +Plant_Table_Name + "(name,min_light,max_light,light_minutes,min_air_hum,max_air_hum,"
+                    "min_air_temp,max_air_temp,water_seconds,water_interval_days,min_soil_hum,max_soil_hum,notes)"
+                    #name,min max light, light minutes, air humidity
+                    "values ('MotherInLawsTongue',90,600,720,60,100,"
+                   #air temp, watering, soil moisture, notes
+                    "18,32,30,0,400,700,'Its a test plant')")
+        try:
+            self.cursor.execute(command)
+        except mariadb.Error as err:
+            print(err.msg)
+            
+        self.connection.commit()
     
     def GetPlantInfo(self,plantnum):
-        command = ("SELECT * FROM" +Table_Plant_Name + "WHERE plant_number=="+str(plantnum))
+        command = ("SELECT * FROM " +Plant_Table_Name + " WHERE plant_number = "+str(plantnum))
         try:
             self.cursor.execute(command)
             for row in self.cursor:
+                print(row)
                 name = row[1]
                 minlight = row[2]
                 maxlight = row[3]
