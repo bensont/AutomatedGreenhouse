@@ -1,4 +1,6 @@
 import SensorFacade
+import RelayFacade
+import CameraFacade
 
 class Plot(object):
     def __init__(self, indb, incv,inpnum):
@@ -26,6 +28,7 @@ class Plot(object):
         self.sensor_facade = SensorFacade.SensorFacade()
         #when we add more than one plot, this is illigal
         self.relay_facade = RelayFacade.RelayFacade()
+        self.camera_facade = CameraFacade.CameraFacade()
         
         # Information for the GPIO for each device on the relay
         #self.light_GPIO = light_GPIO
@@ -60,11 +63,7 @@ class Plot(object):
             self.relay_facade.RelayNOff(2)
             print("Turn off HUMIDIFIER")
         # Check soil moisture
-        if self.cur_moisture < self.moisture_min:
-            # potentially turn on water pump (send seconds to be turned on)
-            # there needs to be a check to see when the last time the plot was watered. If too recently, don't water
-            self.relay_facade.RelayNOn(3)
-            print("Turn on WATER")
+        check_watering()
         # Check light (use full)
         if self.cur_light_full < self.light_min:
             # potentially turn on light
@@ -77,6 +76,14 @@ class Plot(object):
             self.relay_facade.RelayNOff(4)
             print("Turn off LIGHT")
         # Check the time of day to turn the light off if the time is outside the plot's light time window
+
+    def check_watering(self):
+        #Needs to make a daemon thread to turn of waterer after n seconds
+        if self.cur_moisture < self.moisture_min:
+            # potentially turn on water pump (send seconds to be turned on)
+            # there needs to be a check to see when the last time the plot was watered. If too recently, don't water
+            self.relay_facade.RelayNOn(3)
+            print("Turn on WATER")
 
     def return_current(self):
         return (self.cur_light_lux, self.cur_light_full, self.cur_light_ir, self.cur_humidity, self.cur_airTemp, self.cur_moisture, self.cur_soilTemp)
