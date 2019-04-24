@@ -1,36 +1,34 @@
 import SensorFacade
 
 class Plot(object):
-    def __init__(self, name, category, light_minutes, light_min, humidity_min, humidity_max, moisture_min, moisture_max, water_seconds, water_interval, notes, cur_airTemp = None, cur_humidity = None, cur_moisture = None, cur_soilTemp = None, cur_light_full = None, cur_light_ir = None, cur_light_lux = None):
-        #This should be requested from the database rather than passed in
-        # Semi-Permanent variables. Can be changed in the database
-        self.name = name
-        self.category = category
-        self.light_minutes = light_minutes
-        self.light_min = light_min
-        self.humidity_min = humidity_min
-        self.humidity_max = humidity_max
-        #self.temperature_min = temperature_min
-        #self.temperature_max = temperature_max
-        self.moisture_min = moisture_min
-        self.moisture_max = moisture_max
-        self.water_seconds = water_seconds # this could be done in ounces, but this is easier for the pump, which has its own adjustment knob for flow rate
-        self.water_interval = water_interval # this is done in DAYS
-        self.notes = notes
-        # Sensor variables for the most recent sensor information
-        self.cur_airTemp = cur_airTemp
-        self.cur_humidity = cur_humidity
-        self.cur_moisture = cur_moisture
-        self.cur_soilTemp = cur_soilTemp
-        self.cur_light_full = cur_light_full
-        self.cur_light_ir = cur_light_ir
-        self.cur_light_lux = cur_light_lux
+    def __init__(self, indb, incv,inpnum):
+        #call the database to ask about itself
+        self.plant_num = inpnum
+        self.database = indb
+        self.cv = incv
+        info = []
+        with self.cv:
+            info = self.database.GetPlantInfo(inpnum)
+        self.name = info[0]
+        self.light_min = info[1]
+        self.light_max = info[2]
+        self.humidity_min = info[3]
+        self.humidity_max = info[4]
+        self.temperature_min = info[5]
+        self.temperature_max = info[6]
+        self.water_seconds = info[7]
+        self.water_interval = info[8]
+        self.moisture_min = info[9]
+        self.moisture_max = info[10]
+       
+        self.sensor_facade = SensorFacade.SensorFacade()
+        #self.relay_facade = RelayFacade.RelayFacade()
+        
         # Information for the GPIO for each device on the relay
         #self.light_GPIO = light_GPIO
         #self.humidifier_GPIO = humidifier_GPIO
         #self.heater_GPIO = heater_GPIO
         #self.water_GPIO = water_GPIO
-        self.sensor_facade = SensorFacade.SensorFacade()
         
 
     # Function uses the sensor facade to get the current sensor readings for the plot

@@ -39,6 +39,8 @@ class DatabaseFacade:
                             "`max_air_temp` int(8) NOT NULL,"
                             "`water_seconds` int(8) NOT NULL,"
                             "`water_interval_days` int(8) NOT NULL,"
+                            "`min_soil_hum` int(8) NOT NULL,"
+                            "`max_soil_hum` int(8) NOT NULL,"
                             "`notes` char(500),"
                             "PRIMARY KEY(`plant_number`))"
                             )
@@ -77,6 +79,27 @@ class DatabaseFacade:
             print(err.msg)
             
         self.connection.commit()
+    
+    def GetPlantInfo(self,plantnum):
+        command = ("SELECT * FROM" +Table_Plant_Name + "WHERE plant_number=="+str(plantnum))
+        try:
+            self.cursor.execute(command)
+            for row in self.cursor:
+                name = row[1]
+                minlight = row[2]
+                maxlight = row[3]
+                lightmin = row[4]
+                minairhum = row[5]
+                maxairhum = row[6]
+                minairtemp = row[7]
+                maxairtemp = row[8]
+                waterseconds = row[9]
+                waterinterval = row[10]
+                minsoilmoist = row[11]
+                maxsoilmoist = row[12]
+                return(name,minlight,maxlight,lightmin,minairhum,maxairhum,minairtemp,maxairtemp,waterseconds,waterinterval,minsoilmoist,maxsoilmoist)
+        except mariadb.Error as err:
+            print(err.msg)
     
     def Close(self):
         self.cursor.close()
