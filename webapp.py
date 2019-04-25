@@ -71,7 +71,7 @@ def my_form_post():
     full_filename = os.path.join(app.config['UPLOAD_FOLDER'], 'plant.jpg')
     
     #need fixed logic for requesting fewer than max samples
-    Holder.numSamples() = numSamples
+    Holder.NumSamples = num
     
     with Holder.cv():
         time, temp, hum, soil, light = Holder.GetLastData()

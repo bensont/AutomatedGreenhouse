@@ -63,7 +63,7 @@ class Plot(object):
             self.relay_facade.RelayNOff(2)
             print("Turn off HUMIDIFIER")
         # Check soil moisture
-        check_watering()
+        self.check_watering()
         # Check light (use full)
         if self.cur_light_full < self.light_min:
             # potentially turn on light

@@ -13,8 +13,13 @@ class RelayFacade:
         self.relay2 = Pins[1]
         self.relay3 = Pins[2]
         self.relay4 = Pins[3]
-        AllOff()
+        GPIO.setup(Pins[0], GPIO.OUT) # Relay Switch 1
+        GPIO.setup(Pins[1], GPIO.OUT) # Relay Switch 2
+        GPIO.setup(Pins[2], GPIO.OUT) # Relay Switch 3
+        GPIO.setup(Pins[3], GPIO.OUT) # Relay Switch 4
         
+        self.AllOff()  
+    
     def AllOff(self):
         #this could be changed to a set of function calls, but on a small machine isn't worth it
         GPIO.output(self.relay1, True)
@@ -29,10 +34,10 @@ class RelayFacade:
         GPIO.output(self.relay4, False)
         
     def RelayNOn(self,relaynum):
-        GPIO.output(NumToRelay(relaynum),False)
+        GPIO.output(self.NumToRelay(relaynum),False)
         
     def RelayNOff(self,relaynum):
-        GPIO.output(NumToRelay(relaynum),True)
+        GPIO.output(self.NumToRelay(relaynum),True)
         
     def NumToRelay(self,relaynum):
         if(relaynum == 1):
@@ -43,5 +48,6 @@ class RelayFacade:
             return self.relay3
         elif(relaynum == 4):
             return self.relay4
-        
+          
+    
         #if we fall through probably throw an exception?
