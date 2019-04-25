@@ -71,8 +71,9 @@ def my_form_post():
     full_filename = os.path.join(app.config['UPLOAD_FOLDER'], 'plant.jpg')
     
     #need fixed logic for requesting fewer than max samples
+    Holder.numSamples() = numSamples
+    
     with Holder.cv():
-        Holder.SetNumSamples()
         time, temp, hum, soil, light = Holder.GetLastData()
         Holder.cv().notifyAll()
     templateData = {
@@ -81,7 +82,7 @@ def my_form_post():
         'hum'   : hum,
         'soil' : soil,
         'light' : light,
-        'numSamples'    : Holder.numSamples(),
+        'numSamples'    : numSamples(),
         'plant_image' : full_filename
     }
     return render_template('index.html', **templateData)

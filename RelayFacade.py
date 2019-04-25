@@ -16,6 +16,7 @@ class RelayFacade:
         AllOff()
         
     def AllOff(self):
+        #this could be changed to a set of function calls, but on a small machine isn't worth it
         GPIO.output(self.relay1, True)
         GPIO.output(self.relay2, True)
         GPIO.output(self.relay3, True)
