@@ -56,17 +56,23 @@ connections first.
 There are several steps necessary to get the libraries needed to run the system.
 First get python 3 and git installed if they aren't already on the Raspberry Pi.
 You will also need the matplotlib library.
+<br/>
 sudo pip3 install matplotlib
 ***
 ### DHT22 Temperature/Humidity Sensor
 sudo apt-get update
+<br/>
 sudo apt-get install build-essential python-dev python-openssl git
+<br/>
 git clone https://github.com/adafruit/Adafruit_Python_DHT.git && cd Adafruit_Python_DHT
+<br/>
 sudo python setup.py install
+<br/>
 sudo pip3 install Adafruit_DHT
 ***
 For detailed installation and wiring guide:
 https://tutorials-raspberrypi.com/raspberry-pi-measure-humidity-temperature-dht11-dht22/
+<br/>
 If you are interested in how the sensor works, you can now look through the
 downloaded repository for examples.
 ***
@@ -79,6 +85,7 @@ https://learn.adafruit.com/adafruit-stemma-soil-sensor-i2c-capacitive-moisture-s
 ### TSL 2591 Light Sensor
 ***
 git clone https://github.com/maxlklaxl/python-tsl2591.git
+<br/>
 python3 setup.py install
 ***
 See the GitHub repository provided by user maxlklaxl for questions with the module
@@ -94,6 +101,7 @@ git clone https://github.com/bensont/AutomatedGreenhouse.git
 ***
 ### Execute
 ***
-python 3 Main.py
+python3 Main.py
+<br/>
 open browser to localhost::36636
 ***
