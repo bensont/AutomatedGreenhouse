@@ -110,5 +110,5 @@ git clone https://github.com/bensont/AutomatedGreenhouse.git
 python3 Main.py
 <br/>
 <br/>
-open browser to localhost::36636
+open browser to localhost:36636
 ***
