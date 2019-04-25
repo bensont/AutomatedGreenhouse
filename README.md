@@ -32,15 +32,15 @@ for each sensor to get and return readings.
 
 ## Project components
 * Raspberry Pi
-* Air Temperature/Humidity Sensor
-* Soil Temperature/Moisture Sensor
-* Light Sensor
-* Raspberry Pi Camera
+* Air Temperature/Humidity Sensor (https://www.adafruit.com/product/393)
+* Soil Temperature/Moisture Sensor (https://www.adafruit.com/product/4026)
+* Light Sensor (https://www.adafruit.com/product/1980)
+* Raspberry Pi Camera (https://www.adafruit.com/product/3099)
 * Grow Light
 * Water pump
 * Ceramic Heater
 * Humidifier
-* Relay
+* Relay (https://www.amazon.com/JBtek-Channel-Module-Arduino-Raspberry/dp/B00KTEN3TM)
 * 5 V power source (to power relay instead of powering via the RPi, safety...)
 * Breadboard
 * Jumper wires
@@ -49,13 +49,14 @@ Note: Make sure that the grow light, water pump, heater, and humidifier all are
 within specs for the relay. The relay used in this project can handle 10 A across
 each relay at 110 V. BE CAREFUL WITH POWER! Check the Ohms across all connections
 before connecting 110 V AC power. For safety, we used a 24 V DC power source to check all
-connections first.
+connections first. Follow the wiring diagrams provided in the links for each device.
 
 ## Installation
 ***
 There are several steps necessary to get the libraries needed to run the system.
 First get python 3 and git installed if they aren't already on the Raspberry Pi.
 You will also need the matplotlib library.
+<br/>
 <br/>
 sudo pip3 install matplotlib
 ***
@@ -95,7 +96,7 @@ git clone https://github.com/maxlklaxl/python-tsl2591.git
 python3 setup.py install
 ***
 See the GitHub repository provided by user maxlklaxl for questions with the module
-and some simple example code. **Credit to maxlklaxl for this library.** We had trouble
+and some simple example code. **Credit to GitHub user maxlklaxl for this library.** We had trouble
 using the standard Adafruit module for the sensor.
 ***
 This sensor uses the I2C bus. For further information on the TSL2591 and the wiring guide:
