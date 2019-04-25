@@ -7,6 +7,7 @@ import os
 from flask import Flask, render_template, send_file, make_response, request
 app = Flask(__name__)
 
+# declare the location of the photo
 PLANT_FOLDER = os.path.join('static','photo')
 app.config['UPLOAD_FOLDER'] = PLANT_FOLDER
 
@@ -66,6 +67,7 @@ def index():
     }
     return render_template('index.html', **templateData)
 
+# reloads the page with updated graphs
 @app.route('/', methods=['POST'])
 def my_form_post():
     full_filename = os.path.join(app.config['UPLOAD_FOLDER'], 'plant.jpg')
@@ -87,22 +89,27 @@ def my_form_post():
     }
     return render_template('index.html', **templateData)
 
+# Temp graph
 @app.route('/plot/temp')
 def plot_temp():
     return create_plot("Temperature [C]",1)
 
+# Humidity graph
 @app.route('/plot/hum')
 def plot_hum():
     return create_plot("Humidity [%]",2)
 
+# Soil Graph
 @app.route('/plot/soil')
 def plot_soil():
     return create_plot("Soil Moisture",3)
 
+# light intensity graph
 @app.route('/plot/light')
 def plot_light():
     return create_plot("Light Intensity",4)
 
+# creates graph 
 def create_plot(title,ys):
     #data is dates, temps, humidity, soil, lights
     with Holder.cv():
