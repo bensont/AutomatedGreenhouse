@@ -62,16 +62,21 @@ sudo pip3 install matplotlib
 ### DHT22 Temperature/Humidity Sensor
 sudo apt-get update
 <br/>
+<br/>
 sudo apt-get install build-essential python-dev python-openssl git
+<br/>
 <br/>
 git clone https://github.com/adafruit/Adafruit_Python_DHT.git && cd Adafruit_Python_DHT
 <br/>
+<br/>
 sudo python setup.py install
+<br/>
 <br/>
 sudo pip3 install Adafruit_DHT
 ***
 For detailed installation and wiring guide:
 https://tutorials-raspberrypi.com/raspberry-pi-measure-humidity-temperature-dht11-dht22/
+<br/>
 <br/>
 If you are interested in how the sensor works, you can now look through the
 downloaded repository for examples.
@@ -86,10 +91,11 @@ https://learn.adafruit.com/adafruit-stemma-soil-sensor-i2c-capacitive-moisture-s
 ***
 git clone https://github.com/maxlklaxl/python-tsl2591.git
 <br/>
+<br/>
 python3 setup.py install
 ***
 See the GitHub repository provided by user maxlklaxl for questions with the module
-and some simple example code. Credit to maxlklaxl for this library. We had trouble
+and some simple example code. **Credit to maxlklaxl for this library.** We had trouble
 using the standard Adafruit module for the sensor.
 ***
 This sensor uses the I2C bus. For further information on the TSL2591 and the wiring guide:
@@ -102,6 +108,7 @@ git clone https://github.com/bensont/AutomatedGreenhouse.git
 ### Execute
 ***
 python3 Main.py
+<br/>
 <br/>
 open browser to localhost::36636
 ***
