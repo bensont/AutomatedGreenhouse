@@ -2,14 +2,18 @@ import SensorFacade
 import RelayFacade
 import CameraFacade
 
+# Class for a plant. Checks the environment conditions and calls for modifications
+# if needed.
 class Plot(object):
+    # initialize needed values
     def __init__(self, indb, incv,inpnum):
-        #call the database to ask about itself
+        # call the database to ask about itself
         self.plant_num = inpnum
-        #Some Dependancy Injection
+        # Some Dependancy Injection
         self.database = indb
         self.cv = incv
         info = []
+        # set information from the database
         with self.cv:
             info = self.database.GetPlantInfo(inpnum)
         self.name = info[0]
@@ -23,19 +27,12 @@ class Plot(object):
         self.water_interval = info[8]
         self.moisture_min = info[9]
         self.moisture_max = info[10]
-       
-        #these will both need to be transitioned into Dependancy Injection
+
+        # these will both need to be transitioned into Dependancy Injection
         self.sensor_facade = SensorFacade.SensorFacade()
-        #when we add more than one plot, this is illigal
+        # when we add more than one plot, this is illigal
         self.relay_facade = RelayFacade.RelayFacade()
         self.camera_facade = CameraFacade.CameraFacade()
-        
-        # Information for the GPIO for each device on the relay
-        #self.light_GPIO = light_GPIO
-        #self.humidifier_GPIO = humidifier_GPIO
-        #self.heater_GPIO = heater_GPIO
-        #self.water_GPIO = water_GPIO
-        
 
     # Function uses the sensor facade to get the current sensor readings for the plot
     def get_condition(self):
@@ -77,6 +74,7 @@ class Plot(object):
             print("Turn off LIGHT")
         # Check the time of day to turn the light off if the time is outside the plot's light time window
 
+    # Check if the plant actually needs watering
     def check_watering(self):
         #Needs to make a daemon thread to turn of waterer after n seconds
         if self.cur_moisture < self.moisture_min:
@@ -85,5 +83,6 @@ class Plot(object):
             self.relay_facade.RelayNOn(3)
             print("Turn on WATER")
 
+    # get the current condition
     def return_current(self):
         return (self.cur_light_lux, self.cur_light_full, self.cur_light_ir, self.cur_humidity, self.cur_airTemp, self.cur_moisture, self.cur_soilTemp)
