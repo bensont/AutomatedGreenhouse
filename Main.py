@@ -63,8 +63,10 @@ def setUpDataService(database,cv,isrun,running):
         if(local):
             #Only gather data every 3 seconds
             if(time.time()-start > 3):
+                # take a picture every 3 cycles for demo
                 if (count%3 == 0):
                     plot.camera_facade.Take_Picture()
+                # get current condition and decide what to do with it
                 plot.get_condition()
                 plot.check_condition()
                 with cv:
@@ -86,7 +88,7 @@ def userListner(database,cv,isrun,running):
                 with isrun:
                     running = False
                     isrun.notifyAll()
-                database.close()
+                database.Close()
                 cv.notifyAll()
 
 #default python convetion
