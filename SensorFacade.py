@@ -38,7 +38,7 @@ class LightSensor:
     #tsl = tsl2591.Tsl2591()
     # initialize needed values for communication
     def __init__(self):
-        self.tsl = tsl2581.Tsl2591()
+        self.tsl = tsl2591.Tsl2591()
 
     # get the lumin reading
     def get_lux(self):
@@ -100,10 +100,10 @@ class AirSensor:
 # Soil Temp/Humidity Sensor
 class SoilSensor:
     # initialize needed values for communication
-    def __init__:
+    def __init__(self):
         self.i2c_bus = busio.I2C(SCL, SDA)
         # Need to put the address into the sensor constructor for each
-        self.ss = Seesaw(i2c_bus, addr=0x36)
+        self.ss = Seesaw(self.i2c_bus, addr=0x36)
 
     # get the soil moisture from the sensor
     def get_moisture(self):

@@ -40,6 +40,8 @@ def setUpDataService(database,cv):
     running = 0
     while(running < 100):
         if(time.time()-start > 3):
+            if (running%3 == 0):
+                plot.camera_facade.Take_Picture()
             plot.get_condition()
             plot.check_condition()
             with cv:
@@ -47,7 +49,7 @@ def setUpDataService(database,cv):
                 start = time.time()
                 running = running+1
                 cv.notifyAll()
-    
+    plot.relay_facade.AllOff()
     
 if __name__ == "__main__":
     main()
