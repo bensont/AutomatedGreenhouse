@@ -11,6 +11,7 @@ app = Flask(__name__)
 PLANT_FOLDER = os.path.join('static','photo')
 app.config['UPLOAD_FOLDER'] = PLANT_FOLDER
 
+#this class is to hold static variables to allow the flask app to use it
 class Holder:
     datab = None
     NumSamples = 0
@@ -73,7 +74,8 @@ def my_form_post():
     full_filename = os.path.join(app.config['UPLOAD_FOLDER'], 'plant.jpg')
     
     #need fixed logic for requesting fewer than max samples
-    Holder.NumSamples = num
+    #this still might be broken
+    Holder.NumSamples = templateData.numSamples()
     
     with Holder.cv():
         time, temp, hum, soil, light = Holder.GetLastData()
