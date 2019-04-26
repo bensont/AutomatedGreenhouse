@@ -52,6 +52,7 @@ class DatabaseFacade:
                                "PRIMARY KEY(`watering_number`))"
                                )
         
+        #create all of the tables if asked
         for table_name in Tables:
             table_description = Tables[table_name]
             try:
@@ -121,10 +122,12 @@ class DatabaseFacade:
             return(name,minlight,maxlight,lightmin,minairhum,maxairhum,minairtemp,maxairtemp,waterseconds,waterinterval,minsoilmoist,maxsoilmoist)
         
     
+    #close the database connection, and clean up
     def Close(self):
         self.cursor.close()
         self.connection.close()
 
+    #get the last record of sensor data
     def GetLastData(self):
         query = ("SELECT * FROM " + Table_Name + "  ORDER BY record_number DESC LIMIT 1")
         self.cursor.execute(query)
@@ -136,6 +139,7 @@ class DatabaseFacade:
             light = row [1] 
         return time,temp,hum,soil,light
 
+    #get the last n records of sensor data
     def GetHistData(self, numSamples):
         query = ("SELECT * FROM " + Table_Name + "  ORDER BY record_number DESC LIMIT "+str(numSamples))
         self.cursor.execute(query)
@@ -153,6 +157,7 @@ class DatabaseFacade:
             lights.append(row[1])
         return dates, temps, hums, soils, lights
 
+    #get the number of rows in the 'data' table
     def MaxRowsTable(self):
         query = ("SELECT count(*) from " + Table_Name + " ")
         self.cursor.execute(query)
@@ -160,7 +165,3 @@ class DatabaseFacade:
             print(x)
             return x[0]
         #number of rows
-
-
-    #result = connection.execute("SELECT * FROM *")
-        #print(result)

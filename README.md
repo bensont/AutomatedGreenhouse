@@ -142,5 +142,5 @@ git clone https://github.com/bensont/AutomatedGreenhouse.git
 python3 Main.py
 <br/>
 <br/>
-open browser to localhost:36636
+The website is hosted at port 36636 by default. To access go to localhost:36636
 ***
