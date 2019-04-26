@@ -4,7 +4,6 @@ import Plot
 import time
 import threading
 
-global running
 
 def main():
     #pass,user,db,host
@@ -18,19 +17,21 @@ def main():
     
     conditionalvar = threading.Condition()
 
-    running = True
+    isrun = True
+
+    running = threading.Condition()
 
     #create the web app as a thread
-    t = threading.Thread(target=setUpWebApp,args=(db,conditionalvar,))
+    t = threading.Thread(target=setUpWebApp,args=(db,conditionalvar,isrun,running))
     threads.append(t)
     t.start()
 
     #create a thread does data input
-    d = threading.Thread(target=setUpDataService,args=(db,conditionalvar,))
+    d = threading.Thread(target=setUpDataService,args=(db,conditionalvar,isrun,running))
     threads.append(d)
     d.start()
     
-    u = threading.Thread(target=userListner,args=(db,conditionalvar,))
+    u = threading.Thread(target=userListner,args=(db,conditionalvar,isrun,running))
     threads.append(u)
     u.start()
 
@@ -38,36 +39,43 @@ def main():
     #there is an implicit wait here
     #db.close()
 
-def setUpWebApp(database,cv):
+def setUpWebApp(database,cv,run,running):
     #unclear if a conditional variable is required
     webapp.create(database,36636,cv)
+    #this doesn't check right now
 
-def setUpDataService(database,cv):
+def setUpDataService(database,cv,run,running):
     plot = Plot.Plot(database,cv,1)
 
     start = time.time()
     count = 0
-    while(running):
-        if(time.time()-start > 3):
-            if (count%3 == 0):
-                plot.camera_facade.Take_Picture()
-            plot.get_condition()
-            plot.check_condition()
-            with cv:
-                database.AddSensorRecord(plot.return_current())
-                start = time.time()
-                count = count+1
-                cv.notifyAll()
+    with run:
+        while(running):
+            run.notifyAll()
+            if(time.time()-start > 3):
+                if (count%3 == 0):
+                    plot.camera_facade.Take_Picture()
+                plot.get_condition()
+                plot.check_condition()
+                with cv:
+                    database.AddSensorRecord(plot.return_current())
+                    start = time.time()
+                    count = count+1
+                    cv.notifyAll()
     plot.relay_facade.AllOff()
 
-def userListner(database,cv):
-    while (running):
-        test = input("Type q to quit")
-        if(test == 'q'):
-            with cv:
-                running = false
-                database.close()
-                cv.notifyAll()
+def userListner(database,cv,run,running):
+    with run:
+        while (running):
+            run.notifyAll()
+            test = input("Type q to quit")
+            if(test == 'q'):
+                with cv:
+                    with run:
+                        running = false
+                        run.notifyAll()
+                    database.close()
+                    cv.notifyAll()
     
 if __name__ == "__main__":
     main()
