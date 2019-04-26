@@ -4,53 +4,41 @@ from time import sleep
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False) # disable warnings for now
 
-# Pins that are being used for GPIO outputs for the single relay
 Pins = [5,6,13,26]
 
-# Not really a facade. Initially intended to be, but with limited GPIO pins, we
-# decided to only use one class and one relay. A simple facade can easily be
-# implemented in order to add further relays. Only one more relay can be added
-# because each plot requires 5 GPIO pins from the RPi to run the 4 relay switches
-# and the single DHT-22 sensor.
+
 class RelayFacade:
-    # initialize needed values for communication
     def __init__(self):
         self.relay1 = Pins[0]
         self.relay2 = Pins[1]
         self.relay3 = Pins[2]
         self.relay4 = Pins[3]
-        GPIO.setup(Pins[0], GPIO.OUT) # Relay Switch 1
-        GPIO.setup(Pins[1], GPIO.OUT) # Relay Switch 2
-        GPIO.setup(Pins[2], GPIO.OUT) # Relay Switch 3
-        GPIO.setup(Pins[3], GPIO.OUT) # Relay Switch 4
-
-        self.AllOff()
-
-    # Low voltage is power on to the relay. As such, the GPIO pins must send signal
-    # for power off to the devices. Set this first.
+        GPIO.setup(Pins[0], GPIO.OUT) # Relay Switch 1 Heater
+        GPIO.setup(Pins[1], GPIO.OUT) # Relay Switch 2 Humidifier
+        GPIO.setup(Pins[2], GPIO.OUT) # Relay Switch 3 Water
+        GPIO.setup(Pins[3], GPIO.OUT) # Relay Switch 4 Light
+        
+        self.AllOff()  
+    
     def AllOff(self):
         #this could be changed to a set of function calls, but on a small machine isn't worth it
         GPIO.output(self.relay1, True)
         GPIO.output(self.relay2, True)
         GPIO.output(self.relay3, True)
         GPIO.output(self.relay4, True)
-
-    # Turns all devices on
+        
     def AllOn(self):
         GPIO.output(self.relay1, False)
         GPIO.output(self.relay2, False)
         GPIO.output(self.relay3, False)
         GPIO.output(self.relay4, False)
-
-    # Turns relay on for the desired device
+        
     def RelayNOn(self,relaynum):
         GPIO.output(self.NumToRelay(relaynum),False)
-
-    # Turns relay off for the desired device
+        
     def RelayNOff(self,relaynum):
         GPIO.output(self.NumToRelay(relaynum),True)
-
-    # Function that maps a number to a relay for the on/off functions
+        
     def NumToRelay(self,relaynum):
         if(relaynum == 1):
             return self.relay1
@@ -60,6 +48,6 @@ class RelayFacade:
             return self.relay3
         elif(relaynum == 4):
             return self.relay4
-
-
+          
+    
         #if we fall through probably throw an exception?
