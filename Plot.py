@@ -1,6 +1,8 @@
 import SensorFacade
 import RelayFacade
 import CameraFacade
+import time
+from time import sleep
 
 class Plot(object):
     def __init__(self, indb, incv,inpnum):
@@ -15,26 +17,38 @@ class Plot(object):
         self.name = info[0]
         self.light_min = info[1]
         self.light_max = info[2]
-        self.humidity_min = info[3]
-        self.humidity_max = info[4]
-        self.temperature_max = info[6] # switch to 5 after demo
-        self.temperature_min = info[5] # switch to 6 after demo... inverted to show readings have actions
-        self.water_seconds = info[7]
-        self.water_interval = info[8]
-        self.moisture_min = info[9]
-        self.moisture_max = info[10]
+        self.light_minutes = info[3]
+        self.humidity_min = info[4]
+        self.humidity_max = info[5]
+        self.temperature_min = info[6] # switch to 5 after demo
+        self.temperature_max = info[7] # switch to 6 after demo... inverted to show readings have actions
+        self.water_seconds = info[8]
+        self.water_interval = info[9]
+        self.moisture_min = info[10]
+        self.moisture_max = info[11]
+        
+        self.last_watered = time.time()
+        
+        # for debug purposes to make sure the passing happend correctly
+        print("Name:" + self.name)
+        print("Light Min:" + str(self.light_min))
+        print("Light Max:" + str(self.light_max))
+        print("light Minutes:" + str(self.light_minutes))
+        print("Hum Min:" + str(self.humidity_min))
+        print("Hum Max:" + str(self.humidity_max))
+        print("Temp Max:" + str(self.temperature_max))
+        print("Temp Min:" + str(self.temperature_min))
+        print("Water Sec:" + str(self.water_seconds))
+        print("Water Int:" + str(self.water_interval))
+        print("Moist Min:" + str(self.moisture_min))
+        print("Moist Max:" + str(self.moisture_max))
+
        
         #these will both need to be transitioned into Dependancy Injection
         self.sensor_facade = SensorFacade.SensorFacade()
         #when we add more than one plot, this is illigal
         self.relay_facade = RelayFacade.RelayFacade()
         self.camera_facade = CameraFacade.CameraFacade()
-        
-        # Information for the GPIO for each device on the relay
-        #self.light_GPIO = light_GPIO
-        #self.humidifier_GPIO = humidifier_GPIO
-        #self.heater_GPIO = 1
-        #self.water_GPIO = water_GPIO
         
 
     # Function uses the sensor facade to get the current sensor readings for the plot
@@ -77,16 +91,20 @@ class Plot(object):
             print("Turn off LIGHT")
         # Check the time of day to turn the light off if the time is outside the plot's light time window
 
+    # Helper function to check conditions for watering. If the plant has been watered too recently, don't water it.
     def check_watering(self):
-        #Needs to make a daemon thread to turn of waterer after n seconds
-        if self.cur_moisture < self.moisture_min:
-            # potentially turn on water pump (send seconds to be turned on)
+        print("Checking Water Function: Cur Moisture:" + str(self.cur_moisture) + "Min Moisture" + str(self.moisture_min))
+        # Needs to make a daemon thread to turn of waterer after n seconds this works, but the program is essentailly paused for watering
+        # check if the moisture level is low AND the time since last watered is long enough for the plant guidelines
+        if (self.cur_moisture < self.moisture_min) and ((time.time() - self.last_watered) > (self.water_interval * 86400)):
+            # potentially turn on water pump
             # there needs to be a check to see when the last time the plot was watered. If too recently, don't water
             print("Turn on WATER")
             self.relay_facade.RelayNOn(3)
-            sleep(5)
+            sleep(self.water_seconds)
             self.relay_facade.RelayNOff(3)
             print("Turn off WATER")
+            self.last_watered = time.time()
 
     def return_current(self):
         return (self.cur_light_lux, self.cur_light_full, self.cur_light_ir, self.cur_humidity, self.cur_airTemp, self.cur_moisture, self.cur_soilTemp)
