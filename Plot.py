@@ -17,8 +17,8 @@ class Plot(object):
         self.light_max = info[2]
         self.humidity_min = info[3]
         self.humidity_max = info[4]
-        self.temperature_min = info[5]
-        self.temperature_max = info[6]
+        self.temperature_max = info[6] # switch to 5 after demo
+        self.temperature_min = info[5] # switch to 6 after demo... inverted to show readings have actions
         self.water_seconds = info[7]
         self.water_interval = info[8]
         self.moisture_min = info[9]
@@ -48,11 +48,11 @@ class Plot(object):
         if self.cur_airTemp < self.temperature_min:
             # potentially turn on heater
             self.relay_facade.RelayNOn(1)
-            print("Turn on HEATER")
+            print("Turn on HEATER: cur temp:" + str(self.cur_airTemp) + " min temp:" + str(self.temperature_min))
         if self.cur_airTemp > self.temperature_max:
             # potentially turn on heater
             self.relay_facade.RelayNOff(1)
-            print("Turn off HEATER")
+            print("Turn off HEATER: cur temp:" + str(self.cur_airTemp) + " max temp:" + str(self.temperature_max))
         # Check air humidity
         if self.cur_humidity < self.humidity_min:
             # potentially turn ON humidifier
