@@ -4,6 +4,8 @@ import Plot
 import time
 import threading
 
+global running
+
 def main():
     #pass,user,db,host
     db = DBC.DatabaseFacade('ooad','plant','OOADProject','127.0.0.1')
@@ -16,6 +18,8 @@ def main():
     
     conditionalvar = threading.Condition()
 
+    running = True
+
     #create the web app as a thread
     t = threading.Thread(target=setUpWebApp,args=(db,conditionalvar,))
     threads.append(t)
@@ -26,6 +30,11 @@ def main():
     threads.append(d)
     d.start()
     
+    u = threading.Thread(target=userListner,args=(db,conditionalvar,))
+    threads.append(u)
+    u.start()
+
+
     #there is an implicit wait here
     #db.close()
 
@@ -38,7 +47,7 @@ def setUpDataService(database,cv):
 
     start = time.time()
     count = 0
-    while(running:
+    while(running):
         if(time.time()-start > 3):
             if (count%3 == 0):
                 plot.camera_facade.Take_Picture()
@@ -50,6 +59,15 @@ def setUpDataService(database,cv):
                 count = count+1
                 cv.notifyAll()
     plot.relay_facade.AllOff()
+
+def userListner(database,cv):
+    while (running):
+        test = input("Type q to quit")
+        if(test == 'q'):
+            with cv:
+                running = false
+                database.close()
+                cv.notifyAll()
     
 if __name__ == "__main__":
     main()
