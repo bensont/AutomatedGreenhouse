@@ -13,12 +13,13 @@ def main():
     #db.AddPlantRecords()
     #return
     
+    #This holds all of the threads
     threads = []
-    
+    #conditional variable to protect the database
     conditionalvar = threading.Condition()
-
+    #a sentinal for running the app
     running = True
-
+    #conditional varialbe to protect the sentinel
     isrun = threading.Condition()
 
     #create the web app as a thread
@@ -31,6 +32,7 @@ def main():
     threads.append(d)
     d.start()
     
+    #create a thread that listens to the user
     u = threading.Thread(target=userListner,args=(db,conditionalvar,isrun,running))
     threads.append(u)
     u.start()
@@ -39,11 +41,13 @@ def main():
     #there is an implicit wait here
     #db.close()
 
+#Tiny function to launch the webapp
 def setUpWebApp(database,cv,isrun,running):
     #unclear if a conditional variable is required
     webapp.create(database,36636,cv)
     #this doesn't check right now
 
+#Thread to gather data
 def setUpDataService(database,cv,isrun,running):
     plot = Plot.Plot(database,cv,1)
 
@@ -57,6 +61,7 @@ def setUpDataService(database,cv,isrun,running):
             local = running
             isrun.notifyAll()
         if(local):
+            #Only gather data every 3 seconds
             if(time.time()-start > 3):
                 if (count%3 == 0):
                     plot.camera_facade.Take_Picture()
@@ -69,6 +74,7 @@ def setUpDataService(database,cv,isrun,running):
                     cv.notifyAll()
     plot.relay_facade.AllOff()
 
+#thread to listen to uster
 def userListner(database,cv,isrun,running):
     with isrun:
         local = running
@@ -82,6 +88,7 @@ def userListner(database,cv,isrun,running):
                     isrun.notifyAll()
                 database.close()
                 cv.notifyAll()
-    
+
+#default python convetion
 if __name__ == "__main__":
     main()
