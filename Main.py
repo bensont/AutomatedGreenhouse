@@ -37,17 +37,17 @@ def setUpDataService(database,cv):
     plot = Plot.Plot(database,cv,1)
 
     start = time.time()
-    running = 0
-    while(running < 100):
+    count = 0
+    while(running:
         if(time.time()-start > 3):
-            if (running%3 == 0):
+            if (count%3 == 0):
                 plot.camera_facade.Take_Picture()
             plot.get_condition()
             plot.check_condition()
             with cv:
                 database.AddSensorRecord(plot.return_current())
                 start = time.time()
-                running = running+1
+                count = count+1
                 cv.notifyAll()
     plot.relay_facade.AllOff()
     
