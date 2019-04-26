@@ -69,7 +69,7 @@ def setUpDataService(database,cv,isrun,running):
                     cv.notifyAll()
     plot.relay_facade.AllOff()
 
-def userListner(database,cv,run,running):
+def userListner(database,cv,isrun,running):
     with isrun:
         local = running
         isrun.notifyAll()
