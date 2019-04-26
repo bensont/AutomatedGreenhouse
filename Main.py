@@ -78,7 +78,7 @@ def userListner(database,cv,run,running):
         if(test == 'q'):
             with cv:
                 with run:
-                    running = false
+                    running = False
                     run.notifyAll()
                 database.close()
                 cv.notifyAll()
