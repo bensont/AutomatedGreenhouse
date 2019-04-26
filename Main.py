@@ -39,23 +39,23 @@ def main():
     #there is an implicit wait here
     #db.close()
 
-def setUpWebApp(database,cv,run,running):
+def setUpWebApp(database,cv,isrun,running):
     #unclear if a conditional variable is required
     webapp.create(database,36636,cv)
     #this doesn't check right now
 
-def setUpDataService(database,cv,run,running):
+def setUpDataService(database,cv,isrun,running):
     plot = Plot.Plot(database,cv,1)
 
     start = time.time()
     count = 0
-    with run:
+    with isrun:
         local = running
-        run.notifyAll()
+        isrun.notifyAll()
     while(local):
-        with run:
+        with isrun:
             local = running
-            run.notifyAll()
+            isrun.notifyAll()
         if(local):
             if(time.time()-start > 3):
                 if (count%3 == 0):
@@ -70,16 +70,16 @@ def setUpDataService(database,cv,run,running):
     plot.relay_facade.AllOff()
 
 def userListner(database,cv,run,running):
-    with run:
+    with isrun:
         local = running
-        run.notifyAll()
+        isrun.notifyAll()
     while (local):
         test = input("Type q to quit")
         if(test == 'q'):
             with cv:
-                with run:
+                with isrun:
                     running = False
-                    run.notifyAll()
+                    isrun.notifyAll()
                 database.close()
                 cv.notifyAll()
     
