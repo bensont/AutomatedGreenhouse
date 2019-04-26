@@ -17,9 +17,9 @@ def main():
     
     conditionalvar = threading.Condition()
 
-    isrun = True
+    running = True
 
-    running = threading.Condition()
+    isrun = threading.Condition()
 
     #create the web app as a thread
     t = threading.Thread(target=setUpWebApp,args=(db,conditionalvar,isrun,running))
